@@ -76,7 +76,8 @@ public class BuyListController {
         String username = input.get("username");
         try {
             Baloot.getInstance().removeCommodityFromUserBuyList(username, input.get("id"));
-            return new ResponseEntity<>("commodity added to buy list successfully!", HttpStatus.OK);
+            return new ResponseEntity<>("commodity removed from buy list successfully!", HttpStatus.OK);
+            //return new ResponseEntity<>("commodity added to buy list successfully!", HttpStatus.OK);
         } catch (MissingUserId | MissingCommodityId | NotExistentUser | NotExistentCommodity |
                  CommodityIsNotInBuyList e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
