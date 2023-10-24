@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.InvalidRateRange;
 import service.Baloot;
 import model.Comment;
 import model.Commodity;
@@ -42,6 +43,8 @@ public class CommoditiesController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (NumberFormatException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (InvalidRateRange e) {
+            throw new RuntimeException(e);
         }
     }
 

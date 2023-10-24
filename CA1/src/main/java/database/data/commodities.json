@@ -18,5 +18,15 @@
     "rating": 8.8,
     "inStock": 100,
     "image": ""
+  },
+  {
+    "id": "3",
+    "name": "Galaxy23",
+    "providerId": "2",
+    "price": 100,
+    "categories": ["phone", "tech"],
+    "rating": 8.8,
+    "inStock": 0,
+    "image": ""
   }
 ]
