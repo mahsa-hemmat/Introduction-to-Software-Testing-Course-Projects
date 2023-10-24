@@ -12,7 +12,7 @@ public class CommentTest {
     private Comment comment;
 
     @BeforeEach
-    public void setUp() {
+    public void init() {
         comment = new Comment(1, "user@gmail.com", "user", 1, "This is a test comment");
     }
 

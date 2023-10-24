@@ -18,7 +18,7 @@ public class UserTest {
     private User user;
 
     @BeforeEach
-    public void setUp() {
+    public void init() {
         user = new User("Pardis", "password", "Pardis@gmail.com", "2000-09-01", "123 Main St");
     }
 
