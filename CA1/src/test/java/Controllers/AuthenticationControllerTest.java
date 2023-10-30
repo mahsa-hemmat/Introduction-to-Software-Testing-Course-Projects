@@ -31,6 +31,7 @@ public class AuthenticationControllerTest {
         String username = "testUser";
         String password = "testPassword";
         Map<String, String> input = getInput(true, username, password);
+        doNothing().when(baloot).login(username, password);
 
         ResponseEntity<String> response = authenticationController.login(input);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -71,14 +72,15 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    void testSignup() throws UsernameAlreadyTaken {
+    void testSignupSuccess() throws UsernameAlreadyTaken {
         Map<String, String> input = getInput(false, "testUser", "testPassword");
+        doNothing().when(baloot).addUser(any(User.class));
 
         ResponseEntity<String> response = authenticationController.signup(input);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("signup successfully!", response.getBody());
 
-        // Verify that addUser(newUser) was called exactly once
+        // Verify that addUser method was called exactly once
         verify(baloot, times(1)).addUser(any(User.class));
     }
 
