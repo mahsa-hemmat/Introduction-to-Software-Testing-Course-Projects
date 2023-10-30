@@ -42,15 +42,14 @@ public class CommoditiesController {
         try {
             int rate = Integer.parseInt(input.get("rate"));
             String username = input.get("username");
+            // check if user is valid
             Commodity commodity = baloot.getCommodityById(id);
             commodity.addRate(username, rate);
             return new ResponseEntity<>("rate added successfully!", HttpStatus.OK);
         } catch (NotExistentCommodity e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | InvalidRateRange e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (InvalidRateRange e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -60,10 +59,12 @@ public class CommoditiesController {
         String username = input.get("username");
         String commentText = input.get("comment");
 
+        // check user is valid
         User user = null;
         try {
             user = baloot.getUserById(username);
-        } catch (NotExistentUser ignored) {
+        } catch (NotExistentUser e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
 
         Comment comment = new Comment(commentId, user.getEmail(), user.getUsername(), Integer.parseInt(id), commentText);
