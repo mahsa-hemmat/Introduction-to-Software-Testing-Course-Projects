@@ -42,7 +42,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void testLoginWithNotExistentUser() throws NotExistentUser, IncorrectPassword {
+    public void testLoginWhenUserDoesNotExist() throws NotExistentUser, IncorrectPassword {
         String username = "testUser";
         String password = "testPassword";
         Map<String, String> input = getInput(true, username, password);
@@ -57,7 +57,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    public void testLoginWithIncorrectPassword() throws NotExistentUser, IncorrectPassword {
+    public void testLoginWhenPasswordIsIncorrect() throws NotExistentUser, IncorrectPassword {
         String username = "testUser";
         String password = "testPassword";
         Map<String, String> input = getInput(true, username, password);
@@ -85,7 +85,7 @@ public class AuthenticationControllerTest {
     }
 
     @Test
-    void testSignupWithUsernameAlreadyTaken() throws UsernameAlreadyTaken {
+    void testSignupWhenUsernameIsAlreadyTaken() throws UsernameAlreadyTaken {
         Map<String, String> input = getInput(false, "testUser", "testPassword");
         doThrow(new UsernameAlreadyTaken()).when(baloot).addUser(any(User.class));
 

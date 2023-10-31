@@ -45,7 +45,7 @@ public class CommentControllerTest {
     }
 
     @Test
-    public void testLikeCommentWithNotExistentComment() throws NotExistentComment {
+    public void testLikeCommentWhenCommentDoesNotExist() throws NotExistentComment {
         int commentId = 1;
         String username = "testUser";
         Map<String, String> input = new HashMap<>();
@@ -78,7 +78,7 @@ public class CommentControllerTest {
     }
 
     @Test
-    public void testDislikeCommentWithNotExistentComment() throws NotExistentComment {
+    public void testDislikeCommentWhenCommentDoesNotExist() throws NotExistentComment {
         int commentId = 1;
         String username = "testUser";
         Map<String, String> input = new HashMap<>();

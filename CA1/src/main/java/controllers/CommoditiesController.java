@@ -42,7 +42,6 @@ public class CommoditiesController {
         try {
             int rate = Integer.parseInt(input.get("rate"));
             String username = input.get("username");
-            // check if user is valid
             Commodity commodity = baloot.getCommodityById(id);
             commodity.addRate(username, rate);
             return new ResponseEntity<>("rate added successfully!", HttpStatus.OK);
