@@ -76,9 +76,9 @@ public class CommoditiesControllerTest {
         commodity.setId(commodityId);
         String username = "testUser";
         String rate = "5";
-        Map<String, String> input = new HashMap<>();
-        input.put("username", username);
-        input.put("rate", rate);
+        Map<String, String> input = new HashMap<>(){{
+            put("username", username);
+            put("rate", rate);}};
 
         when(baloot.getCommodityById(commodityId)).thenReturn(commodity);
         ResponseEntity<String> response = commoditiesController.rateCommodity(commodityId, input);
@@ -93,9 +93,9 @@ public class CommoditiesControllerTest {
     public void testRateCommodityWhenCommodityDoesNotExist() throws NotExistentCommodity {
         String username = "testUser";
         String rate = "5";
-        Map<String, String> input = new HashMap<>();
-        input.put("username", username);
-        input.put("rate", rate);
+        Map<String, String> input = new HashMap<>(){{
+            put("username", username);
+            put("rate", rate);}};
 
         when(baloot.getCommodityById(anyString())).thenThrow(new NotExistentCommodity());
         ResponseEntity<String> response = commoditiesController.rateCommodity(anyString(), input);
@@ -110,9 +110,9 @@ public class CommoditiesControllerTest {
     public void testRateCommodityWhenNumberFormatIsInvalid() {
         String username = "testUser";
         String rate = "5.7";
-        Map<String, String> input = new HashMap<>();
-        input.put("username", username);
-        input.put("rate", rate);
+        Map<String, String> input = new HashMap<>(){{
+            put("username", username);
+            put("rate", rate);}};
 
         ResponseEntity<String> response = commoditiesController.rateCommodity("2", input);
 
@@ -127,9 +127,9 @@ public class CommoditiesControllerTest {
         commodity.setId(commodityId);
         String username = "testUser";
         String rate = "20";
-        Map<String, String> input = new HashMap<>();
-        input.put("username", username);
-        input.put("rate", rate);
+        Map<String, String> input = new HashMap<>(){{
+                put("username", username);
+                put("rate", rate);}};
 
         when(baloot.getCommodityById(commodityId)).thenReturn(commodity);
         ResponseEntity<String> response = commoditiesController.rateCommodity(commodityId, input);
@@ -141,62 +141,106 @@ public class CommoditiesControllerTest {
     }
 
     @Test
-    public void testAddCommentToCommoditySuccess() throws NotExistentUser {
-        String id = "1";
+    public void testAddCommentToCommoditySuccess() throws NotExistentUser, NotExistentCommodity {
+        String commodityId = "1";
+        Commodity commodity = new Commodity();
+        commodity.setId(commodityId);
         String username = "testUser";
         String commentText = "This is a test comment";
         User user = new User(username, "password", "test@gmail.com", "2000-01-01", "Tehran");
-        Map<String, String> input = new HashMap<>();
-        input.put("username", username);
-        input.put("comment", commentText);
+        Map<String, String> input =  new HashMap<>() {{
+            put("username", username);
+            put("comment", commentText);}};
 
+        when(baloot.getCommodityById(commodityId)).thenReturn(commodity);
         when(baloot.generateCommentId()).thenReturn(10);
         when(baloot.getUserById(username)).thenReturn(user);
         doNothing().when(baloot).addComment(any(Comment.class));
-        ResponseEntity<String> response = commoditiesController.addCommodityComment(id, input);
+        ResponseEntity<String> response = commoditiesController.addCommodityComment(commodityId, input);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("comment added successfully!", response.getBody());
 
+        verify(baloot, times(1)).getCommodityById(commodityId);
         verify(baloot, times(1)).generateCommentId();
         verify(baloot, times(1)).getUserById(username);
         verify(baloot, times(1)).addComment(any(Comment.class));
     }
 
     @Test
-    public void testAddCommentToCommodityWhenUserDoesNotExist() throws NotExistentUser {
-        String id = "1";
+    public void testAddCommentToCommodityWhenUserDoesNotExist() throws NotExistentUser, NotExistentCommodity {
+        String commodityId = "1";
+        Commodity commodity = new Commodity();
+        commodity.setId(commodityId);
         String username = "testUser";
         String commentText = "This is a test comment";
-        Map<String, String> input = new HashMap<>();
-        input.put("username", username);
-        input.put("comment", commentText);
+        Map<String, String> input =  new HashMap<>() {{
+            put("username", username);
+            put("comment", commentText);}};
 
+        when(baloot.getCommodityById(commodityId)).thenReturn(commodity);
         when(baloot.generateCommentId()).thenReturn(10);
         when(baloot.getUserById(username)).thenThrow(new NotExistentUser());
-        ResponseEntity<String> response = commoditiesController.addCommodityComment(id, input);
+        ResponseEntity<String> response = commoditiesController.addCommodityComment(commodityId, input);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(NOT_EXISTENT_USER, response.getBody());
 
+        verify(baloot, times(1)).getCommodityById(commodityId);
         verify(baloot, times(1)).generateCommentId();
         verify(baloot, times(1)).getUserById(username);
     }
 
     @Test
-    public void testGetCommodityComment(){
+    public void testAddCommentToCommodityWhenCommodityDoesNotExist() throws NotExistentCommodity {
+        String commodityId = "1";
+        String username = "testUser";
+        String commentText = "This is a test comment";
+        Map<String, String> input = new HashMap<>(){{
+                put("username", username);
+                put("comment", commentText);
+            }};
+
+        when(baloot.getCommodityById(commodityId)).thenThrow(new NotExistentCommodity());
+        ResponseEntity<String> response = commoditiesController.addCommodityComment(commodityId, input);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(NOT_EXISTENT_COMMODITY, response.getBody());
+
+        verify(baloot, times(1)).getCommodityById(commodityId);
+    }
+
+    @Test
+    public void testGetCommodityCommentSuccess() throws NotExistentCommodity {
         int commodityId = 1;
+        Commodity commodity = new Commodity();
+        commodity.setId(String.valueOf(commodityId));
         ArrayList<Comment> sampleComments = new ArrayList<>();
         sampleComments.add(new Comment(1, "test1@gmail.com", "testUser1", commodityId, "Sample Comment1 For Test"));
         sampleComments.add(new Comment(2, "test2@gmail.com", "testUser2", commodityId, "Sample Comment2 For Test"));
 
+        when(baloot.getCommodityById(String.valueOf(commodityId))).thenReturn(commodity);
         when(baloot.getCommentsForCommodity(commodityId)).thenReturn(sampleComments);
         ResponseEntity<ArrayList<Comment>> response = commoditiesController.getCommodityComment(String.valueOf(commodityId));
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(sampleComments, response.getBody());
 
+        verify(baloot, times(1)).getCommodityById(String.valueOf(commodityId));
         verify(baloot, times(1)).getCommentsForCommodity(commodityId);
+    }
+
+    @Test
+    public void testGetCommodityCommentWhenCommodityDoesNotExist() throws NotExistentCommodity {
+        int commodityId = 1;
+
+        when(baloot.getCommodityById(String.valueOf(commodityId))).thenThrow(new NotExistentCommodity());
+        ResponseEntity<ArrayList<Comment>> response = commoditiesController.getCommodityComment(String.valueOf(commodityId));
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNull(response.getBody());
+
+        verify(baloot, times(1)).getCommodityById(String.valueOf(commodityId));
     }
 
     @Test
@@ -204,9 +248,10 @@ public class CommoditiesControllerTest {
         String searchOption = "name";
         String searchValue = "SampleName";
         ArrayList<Commodity> sampleCommodities = getCommodities("1", "2");
-        Map<String, String> input = new HashMap<>();
-        input.put("searchOption", searchOption);
-        input.put("searchValue", searchValue);
+        Map<String, String> input = new HashMap<>() {{
+            put("searchOption",searchOption);
+            put("searchValue",searchValue);
+        }};
 
         when(baloot.filterCommoditiesByName(searchValue)).thenReturn(sampleCommodities);
         ResponseEntity<ArrayList<Commodity>> response = commoditiesController.searchCommodities(input);
@@ -222,9 +267,10 @@ public class CommoditiesControllerTest {
         String searchOption = "category";
         String searchValue = "SampleCategory";
         ArrayList<Commodity> sampleCommodities = getCommodities("1", "2");
-        Map<String, String> input = new HashMap<>();
-        input.put("searchOption", searchOption);
-        input.put("searchValue", searchValue);
+        Map<String, String> input = new HashMap<>() {{
+            put("searchOption",searchOption);
+            put("searchValue",searchValue);
+        }};
 
         when(baloot.filterCommoditiesByCategory(searchValue)).thenReturn(sampleCommodities);
         ResponseEntity<ArrayList<Commodity>> response = commoditiesController.searchCommodities(input);
@@ -240,9 +286,10 @@ public class CommoditiesControllerTest {
         String searchOption = "provider";
         String searchValue = "SampleProviderName";
         ArrayList<Commodity> sampleCommodities = getCommodities("1", "2");
-        Map<String, String> input = new HashMap<>();
-        input.put("searchOption", searchOption);
-        input.put("searchValue", searchValue);
+        Map<String, String> input = new HashMap<>() {{
+        put("searchOption",searchOption);
+        put("searchValue",searchValue);
+        }};
 
         when(baloot.filterCommoditiesByProviderName(searchValue)).thenReturn(sampleCommodities);
         ResponseEntity<ArrayList<Commodity>> response = commoditiesController.searchCommodities(input);
@@ -256,19 +303,19 @@ public class CommoditiesControllerTest {
     @Test
     public void testGetSuggestedCommoditiesSuccess() throws NotExistentCommodity {
         String commodityId = "1";
-        Commodity commodity1 = new Commodity();
-        commodity1.setId(commodityId);
+        Commodity commodity = new Commodity();
+        commodity.setId(commodityId);
         ArrayList<Commodity> sampleCommodities = getCommodities("2", "3");
 
-        when(baloot.getCommodityById(commodityId)).thenReturn(commodity1);
-        when(baloot.suggestSimilarCommodities(commodity1)).thenReturn(sampleCommodities);
+        when(baloot.getCommodityById(commodityId)).thenReturn(commodity);
+        when(baloot.suggestSimilarCommodities(commodity)).thenReturn(sampleCommodities);
         ResponseEntity<ArrayList<Commodity>> response = commoditiesController.getSuggestedCommodities(commodityId);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(sampleCommodities, response.getBody());
 
         verify(baloot, times(1)).getCommodityById(commodityId);
-        verify(baloot, times(1)).suggestSimilarCommodities(commodity1);
+        verify(baloot, times(1)).suggestSimilarCommodities(commodity);
     }
 
     @Test

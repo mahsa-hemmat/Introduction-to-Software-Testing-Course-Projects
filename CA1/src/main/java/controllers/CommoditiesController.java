@@ -54,10 +54,14 @@ public class CommoditiesController {
 
     @PostMapping(value = "/commodities/{id}/comment")
     public ResponseEntity<String> addCommodityComment(@PathVariable String id, @RequestBody Map<String, String> input) {
+        try {
+            baloot.getCommodityById(id);
+        } catch (NotExistentCommodity e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
         int commentId = baloot.generateCommentId();
         String username = input.get("username");
         String commentText = input.get("comment");
-
         // check user is valid
         User user = null;
         try {
@@ -74,6 +78,11 @@ public class CommoditiesController {
 
     @GetMapping(value = "/commodities/{id}/comment")
     public ResponseEntity<ArrayList<Comment>> getCommodityComment(@PathVariable String id) {
+        try {
+            baloot.getCommodityById(id);
+        } catch (NotExistentCommodity e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
         ArrayList<Comment> comments = baloot.getCommentsForCommodity(Integer.parseInt(id));
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
