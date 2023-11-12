@@ -158,6 +158,18 @@ class EngineTest {
     }
 
     @Test
+    void testAddOrderAndGetFraudulentQuantityWhenOrderExists_() {
+        Order order = new Order();
+        order.setCustomer(1);
+        order.setQuantity(0);
+
+        int fraudulentQuantity = engine.addOrderAndGetFraudulentQuantity(order);
+
+        assertEquals(0, fraudulentQuantity);
+        assertEquals(1, engine.orderHistory.size());
+    }
+
+    @Test
     void testAddOrderAndGetFraudulentQuantityCase1() {
         Order order = new Order();
         order.setCustomer(1);
