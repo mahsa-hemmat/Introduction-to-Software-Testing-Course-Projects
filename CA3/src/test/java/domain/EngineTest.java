@@ -77,11 +77,11 @@ class EngineTest {
         order1.setPrice(10);
         order1.setQuantity(5);
         Order order2 = new Order();
-        order2.setId(3);
+        order2.setId(2);
         order2.setPrice(100);
         order2.setQuantity(10);
         Order order3 = new Order();
-        order3.setId(4);
+        order3.setId(3);
         order3.setPrice(100);
         order3.setQuantity(9);
         engine.orderHistory.add(order1);
@@ -93,7 +93,7 @@ class EngineTest {
     }
 
     @Test
-    void testQuantityPatternByPriceWithPattternDetected() {
+    void testQuantityPatternByPriceWithPatternDetected() {
         Order order1 = new Order();
         order1.setId(1);
         order1.setPrice(10);

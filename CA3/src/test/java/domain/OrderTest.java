@@ -38,4 +38,13 @@ public class OrderTest {
     public void testEqualsWithNonOrderObject() {
         assertFalse(order.equals("Not an Order"));
     }
+
+    @Test
+    public void testOrderFieldsGetter(){
+        assertEquals(1, order.getId());
+        assertEquals(2, order.getCustomer());
+        assertEquals(50, order.getPrice());
+        assertEquals(2, order.getQuantity());
+    }
+
 }
