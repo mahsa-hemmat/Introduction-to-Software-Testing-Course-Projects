@@ -67,10 +67,9 @@ public class UserControllerTest {
     @Test
     void testGetUserWhenUserDoesNotExist() throws Exception {
         when(baloot.getUserById(anyString())).thenThrow(new NotExistentUser());
-
         mockMvc.perform(get("/users/NonExistentUser"))
-                .andExpect(status().isNotFound());
-
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(""));
         verify(baloot, times(1)).getUserById(anyString());
     }
 
@@ -127,6 +126,8 @@ public class UserControllerTest {
                         .content(objectMapper.writeValueAsString(input)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(NOT_EXISTENT_USER));
+
+        verify(baloot, times(1)).getUserById(anyString());
     }
 
     @Test
