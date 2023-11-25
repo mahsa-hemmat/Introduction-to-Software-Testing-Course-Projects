@@ -1,4 +1,4 @@
-package Controllers;
+package controllers.unit;
 import controllers.AuthenticationController;
 import exceptions.*;
 import org.junit.jupiter.api.Test;
